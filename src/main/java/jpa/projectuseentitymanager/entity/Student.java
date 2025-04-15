@@ -1,5 +1,6 @@
 package jpa.projectuseentitymanager.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jpa.projectuseentitymanager.typeVariable.Gender;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,19 +29,11 @@ public class Student {
     @Column(name = "phone")
     private String phone;
 
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private List<Course> course;
-
-    public void addCourse(Course courseAdd) {
-        if(course == null){
-            course = new ArrayList<>();
-        }
-        this.course.add(courseAdd);
-    }
-
-    public void removeCourse(Course courseRemove) {
-        if(course != null){
-            course.remove(courseRemove);
-        }
-    }
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "course_student",
+            joinColumns = @JoinColumn(name = "studentId"),
+            inverseJoinColumns = @JoinColumn(name = "courseId")
+    )
+    private List<Course> course = new ArrayList<>();
 }

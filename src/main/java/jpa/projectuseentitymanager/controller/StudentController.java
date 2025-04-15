@@ -39,7 +39,8 @@ public class StudentController {
 
     @PostMapping()
     public ResponseEntity<String> addStudent(@RequestBody List<Student> student) {
-        for(Student studentSave : student) { // có thể add nhiều or 1 student
+        // có thể add nhiều or 1 student
+        for(Student studentSave : student) {
             studentService.saveStudent(studentSave);
         }
         return new ResponseEntity<>("Save successfully", HttpStatus.OK);

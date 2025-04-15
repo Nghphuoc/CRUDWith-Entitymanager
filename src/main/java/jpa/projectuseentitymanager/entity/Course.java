@@ -1,8 +1,13 @@
 package jpa.projectuseentitymanager.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -21,8 +26,7 @@ public class Course {
     @Column(name = "credits")
     private int credits;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH,CascadeType.REMOVE})
-    @JoinColumn(name = "studentId")
-    @JsonIgnore
-    private Student student;  // khúc này e tính lộn rùi !!! @ManyToMany mới đúng
+    @ManyToMany(mappedBy = "course")
+    @JsonBackReference
+    private List<Student> student = new ArrayList<>();
 }
