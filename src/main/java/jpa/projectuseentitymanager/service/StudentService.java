@@ -3,10 +3,12 @@ package jpa.projectuseentitymanager.service;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
-import jpa.projectuseentitymanager.Dao.StudentDao;
+import jpa.projectuseentitymanager.dao.StudentDao;
 import jpa.projectuseentitymanager.entity.Course;
 import jpa.projectuseentitymanager.entity.Student;
+import jpa.projectuseentitymanager.exceptionHandle.ExceptionHandleFindCourse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -36,20 +38,24 @@ public class StudentService implements StudentDao {
     }
 
     @Override
-    @Transactional
+    // yêu cầu sử dụng lại nếu có, sẽ tạo mới nếu không có
+    @Transactional(propagation = Propagation.REQUIRED)
     public String saveStudent(Student student) {
         List<Course> realCourses = new ArrayList<>();
-
+        // duyệt qua danh sách course có trong khi add student
         if (student.getCourse() != null) {
             for (Course c : student.getCourse()) {
                 // find course by id
                 Course course = entityManager.find(Course.class, c.getId());
-                if (course != null) {
-                    // add to list
-                    realCourses.add(course);
+                if (course == null) {
+                    // if not found
+                    throw new ExceptionHandleFindCourse(c.getId());
                 }
+                // add to list
+                realCourses.add(course);
             }
         }
+        // set các course đã tìm thấy cho student
         student.setCourse(realCourses);
         entityManager.persist(student);
         return "Create student successfully";
@@ -68,9 +74,12 @@ public class StudentService implements StudentDao {
         if (student.getCourse() != null) {
             for (Course c : student.getCourse()) {
                 Course course = entityManager.find(Course.class, c.getId());
-                if (course != null) {
-                    realCourses.add(course);
+                if (course == null) {
+                    // if not found
+                    throw new ExceptionHandleFindCourse(c.getId());
                 }
+                realCourses.add(course);
+
             }
         }
         // Cập nhật thông tin

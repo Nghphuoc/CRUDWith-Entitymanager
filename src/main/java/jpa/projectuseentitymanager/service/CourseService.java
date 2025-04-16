@@ -2,7 +2,7 @@ package jpa.projectuseentitymanager.service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jpa.projectuseentitymanager.Dao.CourseDao;
+import jpa.projectuseentitymanager.dao.CourseDao;
 import jpa.projectuseentitymanager.entity.Course;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

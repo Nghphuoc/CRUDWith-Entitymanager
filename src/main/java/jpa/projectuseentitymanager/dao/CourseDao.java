@@ -1,4 +1,4 @@
-package jpa.projectuseentitymanager.Dao;
+package jpa.projectuseentitymanager.dao;
 
 import jpa.projectuseentitymanager.entity.Course;
 import org.springframework.stereotype.Component;
